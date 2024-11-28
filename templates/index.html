@@ -19,6 +19,7 @@
             <th scope="col">Common Name</th>
             <th scope="col">Confidence</th>
             <th scope="col">Thumbnail</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +33,9 @@
      width="100" height="auto" class="thumbnail"
      onload="checkTransparentImage(this)"
      onclick="showSnapshot('{{ url_for('frigate_snapshot', frigate_event=detection.frigate_event) }}', '{{ url_for('frigate_clip', frigate_event=detection.frigate_event) }}')"/>
+                </td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteDetection({{ detection.id }})">Delete</button>
                 </td>
             </tr>
         {% endfor %}
