@@ -13,6 +13,7 @@ Detections of {{ common_name }} on {{ date }}
         <th>Camera Name</th>
         <th>Score</th>
         <th>Thumbnail</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -23,6 +24,9 @@ Detections of {{ common_name }} on {{ date }}
           <td>{{ '%.2f'|format(record['score']) }}</td>
           <td>
             <img src="{{ url_for('frigate_thumbnail', frigate_event=record['frigate_event']) }}" alt="Thumbnail" width="100" height="auto" class="thumbnail" onload="checkTransparentImage(this)" onclick="showSnapshot('{{ url_for('frigate_snapshot', frigate_event=record['frigate_event']) }}', '{{ url_for('frigate_clip', frigate_event=record['frigate_event']) }}')" />
+          </td>
+          <td>
+            <button class="btn btn-danger" onclick="deleteDetection({{ record['id'] }})">Delete</button>
           </td>
         </tr>
       {% endfor %}

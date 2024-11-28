@@ -158,3 +158,11 @@ def get_earliest_detection_date():
         return earliest_date
     else:
         return None
+
+
+def delete_detection(detection_id):
+    conn = sqlite3.connect(DBPATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM detections WHERE id = ?", (detection_id,))
+    conn.commit()
+    conn.close()

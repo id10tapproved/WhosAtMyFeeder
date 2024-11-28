@@ -74,4 +74,28 @@
         videoClip.pause(); // Pause the video playback
         videoClip.currentTime = 0; // Reset the video playback time to the beginning
     });
+
+    function deleteDetection(detectionId) {
+        if (confirm("Are you sure you want to delete this detection?")) {
+            fetch(`/delete_detection/${detectionId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Failed to delete detection.");
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting detection:", error);
+                alert("An error occurred while deleting the detection.");
+            });
+        }
+    }
+
+    function navigateToDailySummary(input) {
+        const selectedDate = input.value;
+        window.location.href = `/daily_summary/${selectedDate}`;
+    }
 </script>

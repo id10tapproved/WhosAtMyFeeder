@@ -7,6 +7,7 @@ import requests
 from io import BytesIO
 from queries import recent_detections, get_daily_summary, get_common_name, get_records_for_date_hour
 from queries import get_records_for_scientific_name_and_date, get_earliest_detection_date
+from queries import delete_detection
 
 app = Flask(__name__)
 config = None
@@ -112,6 +113,16 @@ def show_daily_summary(date):
     earliest_date = get_earliest_detection_date()
     return render_template('daily_summary.html', daily_summary=daily_summary, date=date, today=today,
                            earliest_date=earliest_date)
+
+
+@app.route('/delete_detection/<int:detection_id>', methods=['DELETE'])
+def delete_detection_route(detection_id):
+    try:
+        delete_detection(detection_id)
+        return '', 204
+    except Exception as e:
+        print(f"Error deleting detection: {e}", flush=True)
+        return str(e), 500
 
 
 def load_config():
