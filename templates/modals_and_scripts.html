@@ -93,4 +93,33 @@
             });
         }
     }
+
+    function updateDetection(detectionId) {
+        const changeDiv = document.getElementById(`change-identification-${detectionId}`);
+        const newDisplayName = changeDiv.querySelector('select[name="new_display_name"]').value;
+
+        fetch(`/update_detection/${detectionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `new_display_name=${encodeURIComponent(newDisplayName)}`
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert("Failed to update detection.");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating detection:", error);
+            alert("An error occurred while updating the detection.");
+        });
+    }
+
+    function showChangeIdentification(detectionId) {
+        const changeDiv = document.getElementById(`change-identification-${detectionId}`);
+        changeDiv.style.display = changeDiv.style.display === 'none' ? 'block' : 'none';
+    }
 </script>

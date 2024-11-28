@@ -7,7 +7,7 @@ import requests
 from io import BytesIO
 from queries import recent_detections, get_daily_summary, get_common_name, get_records_for_date_hour
 from queries import get_records_for_scientific_name_and_date, get_earliest_detection_date
-from queries import delete_detection
+from queries import delete_detection, update_detection, get_all_identified_birds
 
 app = Flask(__name__)
 config = None
@@ -30,8 +30,9 @@ def index():
     earliest_date = get_earliest_detection_date()
     recent_records = recent_detections(5)
     daily_summary = get_daily_summary(today)
+    identified_birds = get_all_identified_birds()
     return render_template('index.html', recent_detections=recent_records, daily_summary=daily_summary,
-                           current_hour=today.hour, date=date_str, earliest_date=earliest_date)
+                           current_hour=today.hour, date=date_str, earliest_date=earliest_date, identified_birds=identified_birds)
 
 
 @app.route('/frigate/<frigate_event>/thumbnail.jpg')
@@ -93,7 +94,8 @@ def frigate_clip(frigate_event):
 @app.route('/detections/by_hour/<date>/<int:hour>')
 def show_detections_by_hour(date, hour):
     records = get_records_for_date_hour(date, hour)
-    return render_template('detections_by_hour.html', date=date, hour=hour, records=records)
+    identified_birds = get_all_identified_birds()
+    return render_template('detections_by_hour.html', date=date, hour=hour, records=records, identified_birds=identified_birds)
 
 
 @app.route('/detections/by_scientific_name/<scientific_name>/<date>', defaults={'end_date': None})
@@ -101,8 +103,9 @@ def show_detections_by_hour(date, hour):
 def show_detections_by_scientific_name(scientific_name, date, end_date):
     if end_date is None:
         records = get_records_for_scientific_name_and_date(scientific_name, date)
+        identified_birds = get_all_identified_birds()
         return render_template('detections_by_scientific_name.html', scientific_name=scientific_name, date=date,
-                               end_date=end_date, common_name=get_common_name(scientific_name), records=records)
+                               end_date=end_date, common_name=get_common_name(scientific_name), records=records, identified_birds=identified_birds)
 
 
 @app.route('/daily_summary/<date>')
@@ -122,6 +125,17 @@ def delete_detection_route(detection_id):
         return '', 204
     except Exception as e:
         print(f"Error deleting detection: {e}", flush=True)
+        return str(e), 500
+
+
+@app.route('/update_detection/<int:detection_id>', methods=['POST'])
+def update_detection_route(detection_id):
+    try:
+        new_display_name = request.form['new_display_name']
+        update_detection(detection_id, new_display_name)
+        return redirect(request.referrer)
+    except Exception as e:
+        print(f"Error updating detection: {e}", flush=True)
         return str(e), 500
 
 

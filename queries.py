@@ -166,3 +166,20 @@ def delete_detection(detection_id):
     cursor.execute("DELETE FROM detections WHERE id = ?", (detection_id,))
     conn.commit()
     conn.close()
+
+
+def update_detection(detection_id, new_display_name):
+    conn = sqlite3.connect(DBPATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE detections SET display_name = ? WHERE id = ?", (new_display_name, detection_id))
+    conn.commit()
+    conn.close()
+
+
+def get_all_identified_birds():
+    conn = sqlite3.connect(DBPATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT display_name FROM detections")
+    results = cursor.fetchall()
+    conn.close()
+    return [result[0] for result in results]
