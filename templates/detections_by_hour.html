@@ -27,6 +27,17 @@ Detections by Hour
           </td>
           <td>
             <button class="btn btn-danger" onclick="deleteDetection({{ record['id'] }})">Delete</button>
+            <button class="btn btn-primary" onclick="showChangeIdentification({{ record['id'] }})">Change</button>
+            <div id="change-identification-{{ record['id'] }}" class="change-identification" style="display: none;">
+              <form action="{{ url_for('update_detection_route', detection_id=record['id']) }}" method="post" onsubmit="event.preventDefault(); updateDetection({{ record['id'] }});">
+                <select name="new_display_name" class="form-select">
+                  {% for bird in identified_birds %}
+                    <option value="{{ bird }}">{{ bird }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-success mt-2">Update</button>
+              </form>
+            </div>
           </td>
         </tr>
       {% endfor %}
