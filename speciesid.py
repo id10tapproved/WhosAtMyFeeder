@@ -145,7 +145,8 @@ def on_message(client, userdata, message):
                 print(result_text, flush=True)
 
                 if index != 964 and score > config['classification']['threshold']:  # 964 is "background"
-
+                    mqtt_payload = "{\"id\": \"" + frigate_event + "\", \"camera\": \"" + after_data['camera'] + "\", \"common_name\": \"" + get_common_name(display_name) + "\"}"
+                    client.publish( 'whosatmyfeeder/detections', mqtt_payload, qos=0, retain=False)
                     cursor = conn.cursor()
 
                     # Check if a record with the given frigate_event exists
