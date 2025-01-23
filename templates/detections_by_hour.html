@@ -22,6 +22,7 @@ Detections by Hour
           <td>{{ record['detection_time'] }}</td>
           <td>{{ record['common_name'] }}</td>
           <td>{{ record['camera_name'] }}</td>
+          <td>{{ '%.2f'|format(record['score']) }}</td>
           <td>
             <img src="{{ url_for('frigate_thumbnail', frigate_event=record['frigate_event']) }}" alt="Thumbnail" width="100" height="auto" class="thumbnail" onload="checkTransparentImage(this)" onclick="showSnapshot('{{ url_for('frigate_snapshot', frigate_event=record['frigate_event']) }}', '{{ url_for('frigate_clip', frigate_event=record['frigate_event']) }}')" />
           </td>
